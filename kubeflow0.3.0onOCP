@@ -3,23 +3,23 @@ Deploy Kubeflow v0.3.0 on OpenShift v3.11
 
 source: https://www.kubeflow.org/docs/started/getting-started-minikube/
 
-mkdir kubeflow && cd kubeflow
-curl https://raw.githubusercontent.com/kubeflow/kubeflow/v0.3.0/scripts/download.sh | bash
-./scripts/kfctl.sh init configs --platform none
+# mkdir kubeflow && cd kubeflow
+# curl https://raw.githubusercontent.com/kubeflow/kubeflow/v0.3.0/scripts/download.sh | bash
+# ./scripts/kfctl.sh init configs --platform none
 
-cd configs
-../scripts/kfctl.sh generate k8s
-../scripts/kfctl.sh apply k8s
+# cd configs
+# ../scripts/kfctl.sh generate k8s
+# ../scripts/kfctl.sh apply k8s
 
-oc adm policy add-scc-to-user anyuid -z ambassador -nkubeflow && \
+# oc adm policy add-scc-to-user anyuid -z ambassador -nkubeflow && \
 oc adm policy add-scc-to-user anyuid -z jupyterhub -nkubeflow && \
 oc adm policy add-scc-to-user privileged -z default -nkubeflow &&
 oc adm policy add-role-to-user cluster-admin -z tf-job-operator -nkubeflow && \
 oc set volume deploy/modeldb-db --add --mount-path=/data/db --claim-size=1Gi --claim-name=modeldb-claim --type=persistentVolumeClaim
 
-ks components list
+# ks components list
 
-oc expose svc ambassador
+# oc expose svc ambassador
 
 
 TensorFlow Training
@@ -27,16 +27,16 @@ TensorFlow Training
 
 source: https://www.kubeflow.org/docs/guides/components/tftraining/
 
-CNN_JOB_NAME=mycnnjob && \
+# CNN_JOB_NAME=mycnnjob && \
 VERSION=v0.3.0 && \
 cd ks_app
 
-ks registry add kubeflow-git github.com/kubeflow/kubeflow/tree/${VERSION}/kubeflow
-ks pkg install kubeflow-git/examples
+# ks registry add kubeflow-git github.com/kubeflow/kubeflow/tree/${VERSION}/kubeflow
+# ks pkg install kubeflow-git/examples
 
-ks generate tf-job-simple ${CNN_JOB_NAME} --name=${CNN_JOB_NAME}
+# ks generate tf-job-simple ${CNN_JOB_NAME} --name=${CNN_JOB_NAME}
 
-ks apply default -c ${CNN_JOB_NAME}
+# ks apply default -c ${CNN_JOB_NAME}
 
-oc get -o yaml tfjobs ${CNN_JOB_NAME}
+# oc get -o yaml tfjobs ${CNN_JOB_NAME}
 
