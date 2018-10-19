@@ -1,0 +1,24 @@
+Configure and use AMQ Streams cluster on OCP 3.11 using OLM
+-----------------------------------------------------------
+
+# oc apply -f http://amq.io/amqstreams/rbac.yaml && \
+# oc adm policy add-cluster-role-to-user strimzi-cluster-operator -z strimzi-cluster-operator --namespace amqstreams-openslava2018 && \
+# oc adm policy add-cluster-role-to-user strimzi-kafka-broker -z strimzi-cluster-operator --namespace amqstreams-openslava2018
+
+add persistance:
+
+    storage:
+      type: persistent-claim
+      size: 1Gi
+      deleteClaim: false
+
+# oc get kafka
+# oc get kafkatopic
+
+Example clients
+
+Producer:
+# oc run kafka-producer -ti --image=strimzi/kafka:latest --restart=Never \-- bin/kafka-console-producer.sh --broker-list my-cluster-kafka-bootstrap:9092 --topic my-first-topic
+
+Consumer:
+# oc run kafka-consumer -ti --image=strimzi/kafka:latest --restart=Never \-- bin/kafka-console-consumer.sh --bootstrap-server my-cluster-kafka-bootstrap:9092 --topic my-first-topic --from-beginning
